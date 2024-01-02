@@ -6,7 +6,8 @@ const setupadnStartService = async() =>{
     // create a express object;
     const app = express();
 
-    app.use(bodyParser.json());
+    //middleware;
+    app.use(bodyParser.json());     
 
     app.listen(PORT, ()=>{
         console.log(`server listening at port :- ${PORT}`);
