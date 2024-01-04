@@ -91,9 +91,32 @@ const update = async (req, res) => {
     }
 }
 
+//  getAllCity  --> url - /city and filter data in query params
+
+const getAll = async(req, res) => {
+    try {
+        const cities = await cityService.getAllCities(req.query);
+        res.status(200).json({
+            data: cities,
+            success: true,
+            message: "Successfully fetched all the cities",
+            error: {}
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            data: {},
+            success: false,
+            message: "Not able to fetch all the cities",
+            error: error
+        });
+    }
+}
+
 module.exports = {
     create,
     destroy,
     get,
-    update
+    update,
+    getAll
 }

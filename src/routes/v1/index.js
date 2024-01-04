@@ -15,5 +15,7 @@ router.get('/city/:id', CityController.get);
 // patch    =>  PATCH req, id through url params & data through req body;
 router.patch('/city/:id', CityController.update);
 
+// get all
+router.get('/city', CityController.getAll);
 
 module.exports = router;
