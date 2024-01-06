@@ -45,6 +45,7 @@ class CityRepository {
         }
     }
 
+
     async getCity(cityId) {
         try {
             const city = await City.findByPk(cityId);
@@ -54,6 +55,7 @@ class CityRepository {
             throw { error };
         }
     }
+
 
     async getAllCities(filter) {
         try {
@@ -74,6 +76,7 @@ class CityRepository {
             throw { error };
         }
     }
+    
 }
 
 module.exports = { CityRepository };
