@@ -1,11 +1,12 @@
-const {CityRepository} = require('../repository/index');
+const { CityRepository } = require('../repository/index');
 
-class CityService{
-    constructor(){
+class CityService {
+    constructor() {
         this.cityRepository = new CityRepository();
     }
 
-    async createCity(data){
+    
+    async createCity(data) {
         try {
             const city = await this.cityRepository.createCity(data);
             return city;
@@ -16,7 +17,7 @@ class CityService{
     }
 
 
-    async deleteCity(cityId){
+    async deleteCity(cityId) {
         try {
             const response = this.cityRepository.deleteCity(cityId);
             return response;
@@ -25,9 +26,9 @@ class CityService{
             throw { error };
         }
     }
-    
 
-    async updateCity(cityId, data){
+
+    async updateCity(cityId, data) {
         try {
             const city = this.cityRepository.updateCity(cityId, data);
             return city;
@@ -38,7 +39,7 @@ class CityService{
     }
 
 
-    async getCity(cityId){
+    async getCity(cityId) {
         try {
             const city = await this.cityRepository.getCity(cityId);
             return city;
@@ -47,11 +48,11 @@ class CityService{
             throw { error };
         }
     }
-    
-    
-    async getAllCities(filter){
+
+
+    async getAllCities(filter) {
         try {
-            const cities = await this.cityRepository.getAllCities({name:filter.name});
+            const cities = await this.cityRepository.getAllCities({ name: filter.name });
             return cities;
         } catch (error) {
             console.log("Some error at service level !");
@@ -60,4 +61,4 @@ class CityService{
     }
 }
 
-module.exports = {CityService};
+module.exports = CityService;

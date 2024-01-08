@@ -16,8 +16,9 @@ class CityRepository {
     //     }
     // }
 
-    
+
     // create multiple cities in bulk by passing an array of object in req.body
+
 
     async createCity(data_array) {
         try {
@@ -29,6 +30,7 @@ class CityRepository {
             throw { error };
         }
     }
+
 
     async deleteCity(cityId) {          // delete the city;
         try {
@@ -71,7 +73,7 @@ class CityRepository {
         }
     }
 
-
+    // if no filter, then it will return all the cities;
     async getAllCities(filter) {
         try {
             if (filter.name) {
@@ -94,4 +96,4 @@ class CityRepository {
 
 }
 
-module.exports = { CityRepository };
+module.exports = CityRepository;
