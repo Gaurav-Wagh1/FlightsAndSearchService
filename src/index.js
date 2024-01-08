@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const CityRepository = require('./repository/city-repository.js');
 
 const APIRoutes = require('./routes/index.js');
-const db = require('./models/index.js');
+const {City, Airport} = require('./models/index.js');
 
 const setupadnStartService = async() =>{
     // create a express object;
@@ -16,9 +16,9 @@ const setupadnStartService = async() =>{
 
     app.use('/api', APIRoutes);
 
-app.listen(PORT, ()=>{
+app.listen(PORT, async()=>{
         console.log(`server listening at port :- ${PORT}`);
-    })
+     })
 }
 
 setupadnStartService();

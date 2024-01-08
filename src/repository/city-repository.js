@@ -3,17 +3,32 @@ const { Op } = require('sequelize');
 
 class CityRepository {
 
-    async createCity({ name }) {        // create the city;
+    // create a particular city;
+
+    // async createCity({ name }) {        
+    //     try {
+    //         const city = await City.create({ name });
+    //         return city;
+    //     }
+    //     catch (error) {
+    //         console.log("Some error at repository level !");
+    //         throw { error };
+    //     }
+    // }
+
+    
+    // create multiple cities in bulk by passing an array of object in req.body
+
+    async createCity(data_array) {
         try {
-            const city = await City.create({ name });
-            return city;
-        }
-        catch (error) {
+            const cities = await City.bulkCreate(data_array);
+            return cities;
+
+        } catch (error) {
             console.log("Some error at repository level !");
             throw { error };
         }
     }
-
 
     async deleteCity(cityId) {          // delete the city;
         try {
@@ -62,7 +77,7 @@ class CityRepository {
             if (filter.name) {
                 const cities = await City.findAll({
                     where: {
-                        name:{
+                        name: {
                             [Op.startsWith]: filter.name
                         }
                     }
@@ -76,7 +91,7 @@ class CityRepository {
             throw { error };
         }
     }
-    
+
 }
 
 module.exports = { CityRepository };
