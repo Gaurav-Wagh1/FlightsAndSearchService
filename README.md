@@ -48,3 +48,11 @@ and then execute npx sequelize db:migrate;
 ### Airport   -->   id, name, address, city_id, created_at, updated_at;
     Relationship --> City has many airports and Airport belongs to a city,
     one to many relation;
+
+
+## Conventions used for routes and request payload
+
+  - create   =>  POST req, data in req body;
+  - get      =>  GET req, URL - /airplanes/:id
+  - patch    =>  PATCH req, id through url params & data through req body;
+  - delete   =>  DELETE req, URL => /airplanes/:id
