@@ -1,5 +1,7 @@
 const { FlightService } = require('../services/index');
 const CrudController = require('./crud-controller');
+const { SuccessCodes, ServerErrorCodes } = require('../utils/error-codes');
+
 
 const flightService = new FlightService();
 
@@ -80,15 +82,14 @@ class FlightController extends CrudController {
         try {
             const flightDataObject = this.#createRequestDataObject("create", req.body);
             const flight = await flightService.create(flightDataObject);
-            return res.status(201).json({
+            return res.status(SuccessCodes.CREATED).json({
                 data: flight,
                 success: true,
                 error: {},
                 message: "Successfully created teh flight"
             });
         } catch (error) {
-            console.log("Not able to create the flight");
-            return res.status(500).json({
+            return res.status(ServerErrorCodes.INTERNAL_SERVER_ERROR).json({
                 data: {},
                 success: false,
                 error: error,
@@ -102,14 +103,14 @@ class FlightController extends CrudController {
         try {
             const flightDataObject = this.#createRequestDataObject("getAll", req.query);
             const flights = await flightService.getAll(flightDataObject);
-            return res.status(200).json({
+            return res.status(SuccessCodes.OK).json({
                 data: flights,
                 success: true,
                 error: {},
                 message: "Successfully fetched the flight"
             });
         } catch (error) {
-            return res.status(500).json({
+            return res.status(ServerErrorCodes.INTERNAL_SERVER_ERROR).json({
                 data: {},
                 success: false,
                 error: error,
@@ -122,14 +123,14 @@ class FlightController extends CrudController {
         try {
             const flightDataObject = this.#createRequestDataObject("update", req.body);
             const response = await flightService.update(req.params.id, flightDataObject);
-            return res.status(200).json({
+            return res.status(SuccessCodes.OK).json({
                 data: response,
                 success: true,
                 error: {},
                 message: "Successfully fetched the flight"
             });
         } catch (error) {
-            return res.status(500).json({
+            return res.status(ServerErrorCodes.INTERNAL_SERVER_ERROR).json({
                 data: {},
                 success: false,
                 error: error,

@@ -1,5 +1,6 @@
 const { AirportService } = require('../services/index');
 const CrudController = require('./crud-controller');
+const {SuccessCodes, ServerErrorCodes} = require('../utils/error-codes');
 
 const airportService = new AirportService();
 
@@ -40,13 +41,13 @@ class AirportController extends CrudController {
         try {
             const airportRequestData = this.#createRequestDataObject("create", req.body);
             const airport = await airportService.create(airportRequestData);
-            res.status(201).json({
+            res.status(SuccessCodes.CREATED).json({
                 result: airport,
                 success: true,
                 error: {}
             });
         } catch (error) {
-            res.status(500).json({
+            res.status(ServerErrorCodes.INTERNAL_SERVER_ERROR).json({
                 result: {},
                 success: false,
                 error: error
@@ -59,13 +60,13 @@ class AirportController extends CrudController {
         try {
             const airportRequestData = this.#createRequestDataObject("update", req.body)
             const updatedAirport = await airportService.update(req.params.id, airportRequestData);
-            res.status(200).json({
+            res.status(SuccessCodes.OK).json({
                 result: updatedAirport,
                 success: true,
                 error: {}
             });
         } catch (error) {
-            res.status(500).json({
+            res.status(ServerErrorCodes.INTERNAL_SERVER_ERROR).json({
                 result: {},
                 success: false,
                 error: error
