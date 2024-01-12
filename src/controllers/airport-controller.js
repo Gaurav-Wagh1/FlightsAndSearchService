@@ -1,86 +1,78 @@
 const { AirportService } = require('../services/index');
+const CrudController = require('./crud-controller');
 
 const airportService = new AirportService();
 
+class AirportController extends CrudController {
+    constructor() {
+        super(airportService);
+    }
 
-// POST req, data in req body;
-const create = async (req, res) => {
-    try {
-        const airport = await airportService.createAirport(req.body);
-        res.status(201).json({
-            result: airport,
-            success: true,
-            error: {}
-        });
-    } catch (error) {
-        res.status(500).json({
-            result: {},
-            success: false,
-            error: error
-        });
+    #createRequestDataObject = (method, reqObject) => {
+        switch (method) {
+            case "create":
+                return {
+                    name: reqObject.name,
+                    city_id: reqObject.city_id,
+                    address: reqObject.address
+                }
+
+            case "update":
+                const result = {}
+                if (reqObject.name) {
+                    result.name = reqObject.name
+                }
+                if (reqObject.city_id) {
+                    result.city_id = reqObject.city_id
+                }
+                if (reqObject.address) {
+                    result.address = reqObject.address
+                }
+                return result;
+
+            default:
+                return {};
+        }
+    }
+
+
+    create = async (req, res) => {
+        try {
+            const airportRequestData = this.#createRequestDataObject("create", req.body);
+            const airport = await airportService.create(airportRequestData);
+            res.status(201).json({
+                result: airport,
+                success: true,
+                error: {}
+            });
+        } catch (error) {
+            res.status(500).json({
+                result: {},
+                success: false,
+                error: error
+            });
+        }
+    }
+
+
+    update = async (req, res) => {
+        try {
+            const airportRequestData = this.#createRequestDataObject("update", req.body)
+            const updatedAirport = await airportService.update(req.params.id, airportRequestData);
+            res.status(200).json({
+                result: updatedAirport,
+                success: true,
+                error: {}
+            });
+        } catch (error) {
+            res.status(500).json({
+                result: {},
+                success: false,
+                error: error
+            });
+        }
     }
 }
 
 
-// GET req, URL - /city/:id
-const get = async (req, res) => {
-    try {
-        const airport = await airportService.getAirport(req.params.id);
-        res.status(200).json({
-            result: airport,
-            success: true,
-            error: {}
-        });
-    } catch (error) {
-        res.status(500).json({
-            result: {},
-            success: false,
-            error: error
-        });
-    }
-}
-
-
-// PATCH req, id through url params & data through req body;
-const update = async (req, res) => {
-    try {
-        const updatedAirport = await airportService.updateAirport(req.params.id, req.body);
-        res.status(200).json({
-            result: updatedAirport,
-            success: true,
-            error: {}
-        });
-    } catch (error) {
-        res.status(500).json({
-            result: {},
-            success: false,
-            error: error
-        });
-    }
-}
-
-
-// DELETE req, URL => /city/:id
-const destroy = async (req, res) => {
-    try {
-        const response = await airportService.deleteAirport(req.params.id);
-        res.status(200).json({
-            result: response,
-            success: true,
-            error: {}
-        });
-    } catch (error) {
-        res.status(500).json({
-            result: {},
-            success: false,
-            error: error
-        });
-    }
-}
-
-module.exports = {
-    create,
-    get,
-    update,
-    destroy
-}
+module.exports = AirportController;

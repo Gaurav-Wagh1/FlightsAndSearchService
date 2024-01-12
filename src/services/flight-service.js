@@ -1,14 +1,22 @@
 const { FlightRepository, AirplaneRepository } = require('../repository/index');
+const CrudService = require('./crud-service');
 const { compareTiming } = require('../utils/helper');
 const { Op } = require('sequelize');
 
-class FlightService {
+const airplaneRepository = new AirplaneRepository;
+
+class FlightService extends CrudService {
+
+    constructor() {
+        const flightRepository = new FlightRepository();
+        super(flightRepository);
+    }
 
     #createFilter(data) {
-        const filter ={};       // main filter object
+        const filter = {};       // main filter object
 
         // sub filter object, it will be pushed into the array;
-        const filterObject = {};   
+        const filterObject = {};
 
         if (data.departureAirportId) {
             filterObject.departureAirportId = data.departureAirportId;
@@ -19,42 +27,39 @@ class FlightService {
         if (data.airplaneId) {
             filterObject.airplaneId = data.airplaneId;
         }
+        if (data.price) {
+            filterObject.price = data.price;
+        }
 
         // this array is calculated for "and" operator of sequelize
         const filterArray = [];
 
         if (data.minPrice) {
-            filterArray.push({price:{[Op.gte]:data.minPrice}});
+            filterArray.push({ price: { [Op.gte]: data.minPrice } });
         };
 
-        if(data.maxPrice) {
-            filterArray.push({price:{[Op.lte]:data.maxPrice}});
+        if (data.maxPrice) {
+            filterArray.push({ price: { [Op.lte]: data.maxPrice } });
         }
 
         // sub object is pushed in array here;
         filterArray.push(filterObject);
 
         // the main filter object here modified here to create a final filter;
-        Object.assign(filter, {[Op.and]:filterArray});
+        Object.assign(filter, { [Op.and]: filterArray });
 
         return filter;
     }
 
-    constructor() {
-        this.airplaneRepository = new AirplaneRepository();
-        this.flightRepository = new FlightRepository();
-    }
 
-
-    async createFlight(data) {
+    async create(data) {
         try {
             if (compareTiming(data.departureTime, data.arrivalTime)) {
                 throw { error: "Arrival date cannot be less than departure date !" }
             }
-            const airplane = await this.airplaneRepository.getAirplane(data.airplaneId);
-            const flight = await this.flightRepository.createFlight({
-                ...data, totalSeats: airplane.capacity
-            });
+            const airplane = await airplaneRepository.get(data.airplaneId);
+            const flight = await super.create({ ...data, totalSeats: airplane.capacity });
+            console.log("here")
             return flight;
         } catch (error) {
             console.log("Something went wrong at the service layer!")
@@ -63,22 +68,12 @@ class FlightService {
     }
 
 
-    async getFlight(id) {
-        try {
-            const flight = await this.flightRepository.getFlight(id);
-            return flight;
-        } catch (error) {
-            console.log("Something went wrong at the service layer!")
-            throw { error }
-        }
-    }
-
-
-    async getAllFlights(filter) {
+    async getAll(filter) {
         try {
             const filterObject = this.#createFilter(filter);    // we'll get final filter object here
-             
-            const flights = await this.flightRepository.getAllFlights(filterObject);
+
+            // const flights = await this.flightRepository.getAllFlights(filterObject);
+            const flights = super.getAll(filterObject);
             return flights;
         } catch (error) {
             console.log("Something went wrong at the service layer!")

@@ -1,63 +1,28 @@
-const { CityRepository } = require('../repository/index');
+const CityRepository = require('../repository/city-repository');
+const { Op } = require('sequelize');
+const CrudService = require('./crud-service');
 
-class CityService {
+
+class CityService extends CrudService {
     constructor() {
-        this.cityRepository = new CityRepository();
+        const cityRepository = new CityRepository();
+        super(cityRepository);
     }
 
-    
-    async createCity(data) {
-        try {
-            const city = await this.cityRepository.createCity(data);
-            return city;
-        } catch (error) {
-            console.log("Some error at service level !");
-            throw { error };
+    #createFilter({ name }) {
+        const filter = {
+            name: {
+                [Op.startsWith]: name
+            }
         }
+        return filter;
     }
 
-
-    async deleteCity(cityId) {
-        try {
-            const response = this.cityRepository.deleteCity(cityId);
-            return response;
-        } catch (error) {
-            console.log("Some error at service level !");
-            throw { error };
+    getAll(filterObject) {
+        if (filterObject.name) {
+            return super.getAll(this.#createFilter(filterObject));
         }
-    }
-
-
-    async updateCity(cityId, data) {
-        try {
-            const city = this.cityRepository.updateCity(cityId, data);
-            return city;
-        } catch (error) {
-            console.log("Some error at service level !");
-            throw { error };
-        }
-    }
-
-
-    async getCity(cityId) {
-        try {
-            const city = await this.cityRepository.getCity(cityId);
-            return city;
-        } catch (error) {
-            console.log("Some error at service level !");
-            throw { error };
-        }
-    }
-
-
-    async getAllCities(filter) {
-        try {
-            const cities = await this.cityRepository.getAllCities({ name: filter.name });
-            return cities;
-        } catch (error) {
-            console.log("Some error at service level !");
-            throw { error };
-        }
+        return super.getAll(filterObject);
     }
 }
 
