@@ -1,24 +1,24 @@
-const express = require('express');
-const {PORT} = require('./config/serverconfig.js');
-const bodyParser = require('body-parser');
-const CityRepository = require('./repository/city-repository.js');
+const express = require("express");
+const { PORT } = require("./config/serverconfig.js");
+const bodyParser = require("body-parser");
+const morgan = require('morgan');
 
-const APIRoutes = require('./routes/index.js');
-const {City, Airport} = require('./models/index.js');
+const APIRoutes = require("./routes/index.js");
 
-const setupadnStartService = async() =>{
-    // create a express object;
-    const app = express();
+const setupadnStartService = async () => {
+  // create a express object;
+  const app = express();
 
-    //middleware;
-    app.use(bodyParser.json());
+  //middleware;
+  app.use(morgan("combined"));
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: true }));
 
+  app.use("/flightsearch/api", APIRoutes);
 
-    app.use('/api', APIRoutes);
-
-app.listen(PORT, async()=>{
-        console.log(`server listening at port :- ${PORT}`);
-     })
-}
+  app.listen(PORT, async () => {
+    console.log(`server listening at port :- ${PORT}`);
+  });
+};
 
 setupadnStartService();

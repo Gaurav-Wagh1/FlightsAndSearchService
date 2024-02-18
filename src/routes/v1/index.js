@@ -1,15 +1,17 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { flightMiddleware, cityMiddleware, airportMiddleware } = require('../../middlewares/index');
+const {
+  flightMiddleware,
+  airportMiddleware,
+} = require("../../middlewares/index");
 
 //classes of all the controllers;
 const {
-    AirplaneController,
-    FlightController,
-    CityController,
-    AirportController,
-} = require('../../controllers/index');
-
+  AirplaneController,
+  FlightController,
+  CityController,
+  AirportController,
+} = require("../../controllers/index");
 
 // instances of all the imported / required classes;
 const cityController = new CityController();
@@ -17,76 +19,64 @@ const airportController = new AirportController();
 const airplaneController = new AirplaneController();
 const flightController = new FlightController();
 
-
 //--------------------------------------- city routes-----------------------------------
 
-
 // pass array of objects of cities to add multiple cities in one go;
-router.post('/cities', cityMiddleware.validateCreateCity, cityController.create);
+router.post("/cities", cityController.create);
 
-router.get('/cities/:id', cityController.get);
+router.get("/cities/:id", cityController.get);
 
-router.get('/cities', cityController.getAll);
+router.get("/cities", cityController.getAll);
 
-router.patch('/cities/:id', cityController.update);
+router.patch("/cities/:id", cityController.update);
 
-router.delete('/cities/:id', cityController.destroy);
-
-
+router.delete("/cities/:id", cityController.destroy);
 
 //--------------------------------------- airport routes-----------------------------------
 
+router.post(
+  "/airports",
+  airportMiddleware.validateCreateAirport,
+  airportController.create
+);
 
-router.post('/airports', airportMiddleware.validateCreateAirport, airportController.create);
+router.get("/airports/:id", airportController.get);
 
-router.get('/airports/:id', airportController.get);
+router.get("/airports", airportController.getAll);
 
-router.get('/airports', airportController.getAll);
+router.patch("/airports/:id", airportController.update);
 
-router.patch('/airports/:id', airportController.update);
-
-router.delete('/airports/:id', airportController.destroy);
-
-
+router.delete("/airports/:id", airportController.destroy);
 
 //--------------------------------------- airplane routes-----------------------------------
 
+router.post("/airplanes", airplaneController.create);
 
-router.post('/airplanes', airplaneController.create);
+router.get("/airplanes/:id", airplaneController.get);
 
-router.get('/airplanes/:id', airplaneController.get);
+router.get("/airplanes", airplaneController.getAll);
 
-router.get('/airplanes', airplaneController.getAll);
+router.patch("/airplanes/:id", airplaneController.update);
 
-router.patch('/airplanes/:id', airplaneController.update);
-
-router.delete('/airplanes/:id', airplaneController.destroy);
-
-
-
+router.delete("/airplanes/:id", airplaneController.destroy);
 
 //--------------------------------------- flight routes-----------------------------------
 
-
 router.post(
-    '/flights',
-    flightMiddleware.validateCreateFlight,
-    flightController.create
+  "/flights",
+  flightMiddleware.validateCreateFlight,
+  flightController.create
 );
 
-router.get('/flights/:id', flightController.get);
+router.get("/flights/:id", flightController.get);
 
-router.get('/flights', flightController.getAll);
+router.get("/flights", flightController.getAll);
 
-router.delete('/flights/:id', flightController.destroy);
+router.delete("/flights/:id", flightController.destroy);
 
-router.patch('/flights/:id', flightController.update);
-
-
+router.patch("/flights/:id", flightController.update);
 
 module.exports = router;
-
-
 
 // create   =>  POST req, data in req body;
 // get      =>  GET req, URL - /airplanes/:id

@@ -59,7 +59,6 @@ class FlightService extends CrudService {
             }
             const airplane = await airplaneRepository.get(data.airplaneId);
             const flight = await super.create({ ...data, totalSeats: airplane.capacity });
-            console.log("here")
             return flight;
         } catch (error) {
             console.log("Something went wrong at the service layer!")
